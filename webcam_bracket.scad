@@ -30,7 +30,7 @@ strengthTounge = length - toungeWidth;
 
 // The lip goes over the build platform so you can slide the bracket on.
 // This is just about the only critical size in here. Measure the bed!
-lipGap = 3.5;
+lipGap = 3.7;
 // If you make this too big, then you're going to cut into your print area.
 lipOverlap = 10+wallWidth;
 
@@ -78,11 +78,11 @@ translate([-length/2, -length/2, 0]) {
 
     // lip
     // subtracting a bit to get around the 2-manifold thing..
-    translate([lipGap+wallWidth, strengthTounge-0.1, 0])
+    translate([lipGap+wallWidth*2, strengthTounge-0.1, 0])
     rotate([0, 0, 90])
     rightAngle(
+      lipOverlap+wallWidth, lipGap+wallWidth,
       lipOverlap, lipGap,
-      lipOverlap-wallWidth, lipGap-wallWidth,
       width);
   }
 }

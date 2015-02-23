@@ -53,6 +53,7 @@ module rightAngle(w1, h1, w2, h2, depth) {
   }
 }
 
+rotate([0, 0, 180])
 translate([-length/2, -lenth/2, 0]) {
   union() {
     // main

@@ -12,43 +12,76 @@ width=35;
 shellThickness = 0.8;
 wallWidth = 2 * shellThickness;
 
-// A crossbar for strength. Put it wherever.
-crossbarOffset = 55;
+// Don't do the strengthening bar all the way so that we don't interfere with
+// where the camera has to be strapped on to.
+cameraClearance = 40;
 
 // A part sticking out next to the main bracket to easily clamp it down with a
 // bulldog clip. Only on one side so that this can still be printed flat.
-lipWidth = 20;
-lipLength = width;
+toungeWidth = 40;
+toungeLength = width;
 
 // Extra part on the inside to stop things from bending. This is meant to end
 // before the camera part starts so as not to interfere with rubber bands there
 // and also to not overlap with the bed.
 strengthWidth = 10;
-strengthLength = 110;
+strengthCamera = length - cameraClearance;
+strengthTounge = length - toungeWidth;
+
+// The lip goes over the build platform so you can slide the bracket on.
+// This is just about the only critical size in here. Measure the bed!
+lipGap = 3.5;
+// If you make this too big, then you're going to cut into your print area.
+lipOverlap = 10+wallWidth;
+
+// Two crossbars for strength. Try and place the outer crossbar where the
+// shortest strengthening bar ends and then the inner one goes at half that.
+crossbarOffset = min(strengthCamera, strengthTounge);
+halfCrossbarOffset = crossbarOffset / 2;
+
+module crossbar(offset) {
+  translate([offset+wallWidth, wallWidth, 0])
+  rotate([0, 0, 45+90])
+  cube([sqrt(2)*offset, wallWidth, width]);
+}
+
+module rightAngle(w1, h1, w2, h2, depth) {
+  difference() {
+    cube([w1, h1, depth]);
+    translate([w1-w2, h1-h2, 0])
+    cube([w2, h2, depth]);
+  }
+}
 
 translate([-length/2, -lenth/2, 0]) {
   union() {
     // main
-    difference() {
-      cube([length, length, width]);
-      translate([wallWidth, wallWidth, 0])
-      cube([length-wallWidth, length-wallWidth, width]);
-    }
+    rightAngle(
+      length, length,
+      length-wallWidth, length-wallWidth,
+      width);
 
-    // crossbar
-    translate([crossbarOffset+wallWidth, wallWidth, 0])
-    rotate([0, 0, 45+90])
-    cube([sqrt(2)*crossbarOffset, wallWidth, width]);
+    // crossbars
+    crossbar(crossbarOffset);
+    crossbar(halfCrossbarOffset);
 
-    // lip
-    translate([0, length-lipWidth, lipLength])
-    cube([wallWidth, lipWidth, lipLength]);
+    // tounge
+    translate([0, length-toungeWidth, toungeLength])
+    cube([wallWidth, toungeWidth, toungeLength]);
 
     // strength
-    difference() {
-      cube([strengthLength, strengthLength, wallWidth]);
-      translate([strengthWidth, strengthWidth, 0])
-      cube([strengthLength-strengthWidth, strengthLength-strengthWidth, wallWidth]);
-    }
+    rightAngle(
+      strengthCamera, strengthTounge,
+      strengthCamera-strengthWidth, strengthTounge-strengthWidth,
+      wallWidth);
+
+    // lip
+    // subtracting a bit to get around the 2-manifold thing..
+    translate([lipGap+wallWidth, strengthTounge-0.1, 0])
+    rotate([0, 0, 90])
+    rightAngle(
+      lipOverlap, lipGap,
+      lipOverlap-wallWidth, lipGap-wallWidth,
+      width);
   }
 }

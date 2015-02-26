@@ -17,14 +17,16 @@ infill = 5;
 
 thickness = (2*shellThickness+infill);
 
-// Don't do the strengthening bar all the way so that we don't interfere with
-// where the camera has to be strapped on to.
+// Don't do the crossbar all the way so that we don't interfere with where the
+// camera has to be strapped on to.
 cameraClearance = 40;
 
 // A part sticking out next to the main bracket to easily clamp it down with a
 // bulldog clip. Only on one side so that this can still be printed flat.
-// I had this 40mm, but then it collides with the linear bearings
+// I had this 40mm, but then it collides with the linear bearings.
 toungeLength = 30;
+// Just double up the main width? You might want to set this to your bulldog
+// clip's width exactly.
 toungeWidth = width;
 
 // The lip goes over the build platform so you can slide the bracket on.
@@ -35,8 +37,7 @@ lipGap = 3.7;
 // If you make this too big, then you're going to cut into your print area.
 lipOverlap = 10+wallWidth;
 
-// Two crossbars for strength. Try and place the outer crossbar where the
-// shortest strengthening bar ends and then the inner one goes at half that.
+// Two crossbars for strength.
 crossbarOffset = length - max(cameraClearance, toungeLength);
 halfCrossbarOffset = crossbarOffset / 2;
 

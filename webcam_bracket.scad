@@ -72,7 +72,6 @@ translate([-length/2, -length/2, 0]) {
     cube([thickness, toungeLength, toungeWidth]);
 
     // lip
-    // subtracting a bit to get around the 2-manifold thing..
     translate([lipGap+thickness+wallWidth, length-(toungeLength+wallWidth), 0])
     rotate([0, 0, 90])
     rightAngle(

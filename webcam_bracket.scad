@@ -12,31 +12,32 @@ width=35;
 shellThickness = 0.8;
 wallWidth = 2 * shellThickness;
 
+// millimeters of infill between walls
+infill = 5;
+
+thickness = (2*shellThickness+infill);
+
 // Don't do the strengthening bar all the way so that we don't interfere with
 // where the camera has to be strapped on to.
 cameraClearance = 40;
 
 // A part sticking out next to the main bracket to easily clamp it down with a
 // bulldog clip. Only on one side so that this can still be printed flat.
-toungeWidth = 40;
-toungeLength = width;
-
-// Extra part on the inside to stop things from bending. This is meant to end
-// before the camera part starts so as not to interfere with rubber bands there
-// and also to not overlap with the bed.
-strengthWidth = 10;
-strengthCamera = length - cameraClearance;
-strengthTounge = length - toungeWidth;
+// I had this 40mm, but then it collides with the linear bearings
+toungeLength = 30;
+toungeWidth = width;
 
 // The lip goes over the build platform so you can slide the bracket on.
 // This is just about the only critical size in here. Measure the bed!
+// TIP: print a tiny little bracket with the gap first and test fit that before
+// you waste hours and lots of plastic.
 lipGap = 3.7;
 // If you make this too big, then you're going to cut into your print area.
 lipOverlap = 10+wallWidth;
 
 // Two crossbars for strength. Try and place the outer crossbar where the
 // shortest strengthening bar ends and then the inner one goes at half that.
-crossbarOffset = min(strengthCamera, strengthTounge);
+crossbarOffset = length - max(cameraClearance, toungeLength);
 halfCrossbarOffset = crossbarOffset / 2;
 
 module crossbar(offset) {
@@ -59,7 +60,7 @@ translate([-length/2, -length/2, 0]) {
     // main
     rightAngle(
       length, length,
-      length-wallWidth, length-wallWidth,
+      length-thickness, length-thickness,
       width);
 
     // crossbars
@@ -67,18 +68,12 @@ translate([-length/2, -length/2, 0]) {
     crossbar(halfCrossbarOffset);
 
     // tounge
-    translate([0, length-toungeWidth, toungeLength])
-    cube([wallWidth, toungeWidth, toungeLength]);
-
-    // strength
-    rightAngle(
-      strengthCamera, strengthTounge,
-      strengthCamera-strengthWidth, strengthTounge-strengthWidth,
-      wallWidth);
+    translate([0, length-toungeLength, toungeWidth])
+    cube([thickness, toungeLength, toungeWidth]);
 
     // lip
     // subtracting a bit to get around the 2-manifold thing..
-    translate([lipGap+wallWidth*2, strengthTounge-0.1, 0])
+    translate([lipGap+thickness+wallWidth, length-(toungeLength+wallWidth), 0])
     rotate([0, 0, 90])
     rightAngle(
       lipOverlap+wallWidth, lipGap+wallWidth,

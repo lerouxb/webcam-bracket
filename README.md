@@ -5,7 +5,7 @@ Metal (or other) 3D printer. The intended use is for taking timelapses of
 prints in OctoPrint / OctoPi.
 
 See the [thing on thingiverse](http://www.thingiverse.com/thing:714587) for
-details.
+photos.
 
 # Build Instructions
 
